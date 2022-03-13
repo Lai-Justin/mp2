@@ -135,37 +135,40 @@ class MultiPacmanAgent(MultiAgentSearchAgent):
         "*** YOUR CODE HERE ***"
         print("Number of Pacmans:", gameState.getNumPacman(), ", Number of ghosts:", gameState.getNumGhosts())
 
+        def evaluation(currentGameState, action):
+        
+            successorGameState = currentGameState.generatePacmanSuccessor(self.index, action)
+            newPos = successorGameState.getPacmanPosition(self.index)
+            newFood = successorGameState.getFood()
+            newGhostStates = successorGameState.getGhostStates()
+        
+            if len(newFood.asList()):
+                fooddist = util.manhattanDistance(newPos, newFood.asList()[0])
+            else:
+                fooddist = 0
+
+            return successorGameState.getScore()[self.index] - fooddist
+
+
 
         legalMoves = gameState.getLegalActions(self.index)
+
         
-        scores = []
-
-        for action in legalMoves:
-            scores.append(self.evaluationFunction(gameState, action))
-
-    
+        scores = [evaluation(gameState, action) for action in legalMoves]
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
         chosenIndex = random.choice(bestIndices) 
 
+        
         return legalMoves[chosenIndex]
 
         util.raiseNotDefined()
 
 
-    def evaluationFunction(self, currentGameState, action):
-        
-        successorGameState = currentGameState.generatePacmanSuccessor(self.index, action)
-        newPos = successorGameState.getPacmanPosition(self.index)
-        newFood = successorGameState.getFood()
-        newGhostStates = successorGameState.getGhostStates()
-        
-        if len(newFood.asList()):
-            fooddist = util.manhattanDistance(newPos, newFood.asList()[0])
-        else:
-            fooddist = 0
 
-        return successorGameState.getScore()[self.index] - fooddist
+
+
+    
 
    
         
